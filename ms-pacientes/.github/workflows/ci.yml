@@ -1,0 +1,58 @@
+name: CI/CD Pipeline - Pacientes
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias
+        run: npm ci
+        working-directory: ./microservicio-pacientes
+
+      - name: Ejecutar Pruebas Unitarias
+        run: npm test
+        working-directory: ./microservicio-pacientes
+
+  code-quality:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Análisis de SonarQube
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build-docker-image:
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Construir imagen Docker
+        run: docker build -t mi-usuario-dockerhub/pacientes-app:${{ github.sha }} ./microservicio-pacientes
+        
+      # Aquí iría el paso para subir la imagen a DockerHub o AWS ECR
+      # - name: Push Docker image
+      #   run: docker push mi-usuario-dockerhub/pacientes-app:${{ github.sha }}
