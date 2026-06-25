@@ -3,10 +3,16 @@ version: '3.8'
 services:
   pacientes-app:
     build: 
-      context: .  # <- Esto le dice a Docker que construya desde la raíz
+      context: .
     container_name: pacientes-app
     ports:
-      - "8080:8080" # Ajustado para Java
+      - "8080:8080"
+    environment:
+      # Le decimos a Spring Boot que la wallet estará en la carpeta /app/wallet dentro de Docker
+      - RUTA_WALLET=/app/wallet
+    volumes:
+      # AQUI CAMBIA LA RUTA DE LA IZQUIERDA POR LA RUTA REAL DE TU WALLET EN WINDOWS
+      - C:\Users\Carlos\Documents\Wallet_Oracle:/app/wallet
     logging:
       driver: loki
       options:
