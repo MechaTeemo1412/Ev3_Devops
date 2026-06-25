@@ -7,5 +7,6 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'ms-pacientes'
+    metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['pacientes-app:3000']
+      - targets: ['pacientes-app:8081']
