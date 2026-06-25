@@ -22,11 +22,12 @@ jobs:
 
       - name: Instalar dependencias
         run: npm ci
-        working-directory: ./Ev3_Devops
+        working-directory: ./ms-pacientes
 
+      # IE6: Validación automatizada. Si falla, rompe el pipeline protegiendo producción.
       - name: Ejecutar Pruebas Unitarias
         run: npm test
-        working-directory: ./Ev3_Devops
+        working-directory: ./ms-pacientes
 
   code-quality:
     runs-on: ubuntu-latest
@@ -37,22 +38,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      # IE5: Políticas de cumplimiento y calidad de código
       - name: Análisis de SonarQube
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  build-docker-image:
-    runs-on: ubuntu-latest
-    needs: code-quality
-    steps:
-      - name: Checkout del código
-        uses: actions/checkout@v3
-
-      - name: Construir imagen Docker
-        run: docker build -t mi-usuario-dockerhub/pacientes-app:${{ github.sha }} ./microservicio-pacientes
-        
-      # Aquí iría el paso para subir la imagen a DockerHub o AWS ECR
-      # - name: Push Docker image
-      #   run: docker push mi-usuario-dockerhub/pacientes-app:${{ github.sha }}
