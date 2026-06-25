@@ -22,11 +22,11 @@ jobs:
 
       - name: Instalar dependencias
         run: npm ci
-        working-directory: ./microservicio-pacientes
+        working-directory: ./Ev3_Devops
 
       - name: Ejecutar Pruebas Unitarias
         run: npm test
-        working-directory: ./microservicio-pacientes
+        working-directory: ./Ev3_Devops
 
   code-quality:
     runs-on: ubuntu-latest
