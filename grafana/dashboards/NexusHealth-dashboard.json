@@ -1,0 +1,31 @@
+{
+  "title": "NexusHealth Dashboard",
+  "panels": [
+    {
+      "title": "CPU Usage (ms-pacientes)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "process_cpu_usage{job=\"ms-pacientes\"}",
+          "legendFormat": "CPU Usage",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "HTTP Requests (ms-pacientes)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{job=\"ms-pacientes\"}[1m])",
+          "legendFormat": "Requests per sec",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 38,
+  "timezone": "browser"
+}

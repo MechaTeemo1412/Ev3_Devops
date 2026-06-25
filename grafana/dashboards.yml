@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+
+name: NexusHealth
+orgId: 1
+folder: NexusHealth
+type: file
+options:
+path: /var/lib/grafana/dashboards
