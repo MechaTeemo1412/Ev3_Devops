@@ -3,7 +3,7 @@ version: '3.8'
 services:
   pacientes-app:
     build: 
-      context: ./ms-pacientes
+      context: ./Ev3_Devops
     container_name: pacientes-app
     ports:
       - "3000:3000"
