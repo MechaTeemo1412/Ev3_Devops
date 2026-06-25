@@ -49,10 +49,6 @@ jobs:
 
       - name: Análisis de SonarCloud
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: >
-          ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
-          -Dsonar.projectKey=MechaTeemo1412_Ev3_Devops 
-          -Dsonar.organization=mechateemo1412 
-          -Dsonar.host.url=https://sonarcloud.io
+        run: ./mvnw clean verify sonar:sonar -Dsonar.projectKey=MechaTeemo1412_Ev3_Devops -Dsonar.organization=mechateemo1412 -Dsonar.host.url=https://sonarcloud.io
