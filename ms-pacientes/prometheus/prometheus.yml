@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s # Con qué frecuencia buscará métricas
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'microservicio-pacientes'
+    static_configs:
+      - targets: ['pacientes-app:3000']
+    # Nota: Tu microservicio debe exponer métricas en la ruta /metrics 
+    # (puedes usar la librería prom-client en Node.js para esto).
