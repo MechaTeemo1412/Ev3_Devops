@@ -5,8 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-and-test:
@@ -15,11 +14,10 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v3
 
-      # Configuramos Java en lugar de Node
       - name: Configurar JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '21' # Cambia a 11 o 21 si usas otra versión
+          java-version: '21'
           distribution: 'temurin'
           cache: maven
 
@@ -28,7 +26,7 @@ jobs:
 
       # IE6: Compilar y ejecutar pruebas unitarias de Java
       - name: Ejecutar Pruebas
-        run: ./mvnw clean test
+        run: ./mvnw clean verify # Usamos verify para generar reportes necesarios para Sonar
 
   code-quality:
     runs-on: ubuntu-latest
@@ -39,15 +37,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configurar JDK 17
+      - name: Configurar JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
-      # IE5: SonarQube para proyectos Maven
-      - name: Análisis de SonarQube
+      # IE5: Análisis de SonarCloud usando el plugin oficial
+      - name: Análisis de SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TU_PROJECT_KEY_AQUI
+        run: >
+          ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
+          -Dsonar.projectKey=MechaTeemo1412_Ev3_Devops 
+          -Dsonar.organization=mechateemo1412 
+          -Dsonar.host.url=https://sonarcloud.io
