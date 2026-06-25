@@ -3,10 +3,14 @@ version: '3.8'
 services:
   pacientes-app:
     build: 
-      context: .  # <- Esto le dice a Docker que construya desde la raíz
+      context: .
     container_name: pacientes-app
     ports:
-      - "8080:8080" # Ajustado para Java
+      - "8081:8081"
+    environment:
+      - RUTA_WALLET=/app/wallet
+    volumes:
+      - ${RUTA_WALLET}:/app/wallet
     logging:
       driver: loki
       options:
@@ -39,6 +43,11 @@ services:
       - "3001:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      # Asegúrate de que estas rutas sean EXACTAS a la ubicación de tus archivos .yml
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
       - loki

@@ -9,7 +9,8 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # Exponemos el puerto
-EXPOSE 8080
+ENV TNS_ADMIN=/app/wallet
+EXPOSE 8081
 
 # Comando para ejecutar la app
 ENTRYPOINT ["java", "-jar", "app.jar"]
