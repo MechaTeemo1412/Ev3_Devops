@@ -6,13 +6,11 @@ services:
       context: .
     container_name: pacientes-app
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
-      # Le decimos a Spring Boot que la wallet estará en la carpeta /app/wallet dentro de Docker
       - RUTA_WALLET=/app/wallet
     volumes:
-      # AQUI CAMBIA LA RUTA DE LA IZQUIERDA POR LA RUTA REAL DE TU WALLET EN WINDOWS
-      - C:\Users\Carlos\Documents\Wallet_Oracle:/app/wallet
+      - ${RUTA_WALLET}:/app/wallet
     logging:
       driver: loki
       options:
@@ -45,6 +43,11 @@ services:
       - "3001:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      # Asegúrate de que estas rutas sean EXACTAS a la ubicación de tus archivos .yml
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
       - loki
