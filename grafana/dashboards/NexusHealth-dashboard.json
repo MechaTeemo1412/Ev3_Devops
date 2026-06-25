@@ -1,31 +1,55 @@
 {
-  "title": "NexusHealth Dashboard",
+  "title": "NexusHealth Operacional",
+  "uid": "nexus-health-ops",
+  "schemaVersion": 38,
   "panels": [
     {
-      "title": "CPU Usage (ms-pacientes)",
+      "title": "Tasa de Peticiones HTTP (RPS)",
       "type": "timeseries",
       "datasource": "Prometheus",
       "targets": [
         {
-          "expr": "process_cpu_usage{job=\"ms-pacientes\"}",
-          "legendFormat": "CPU Usage",
+          "expr": "rate(http_server_requests_seconds_count{job='ms-pacientes'}[1m])",
+          "legendFormat": "Peticiones por seg",
           "refId": "A"
         }
       ]
     },
     {
-      "title": "HTTP Requests (ms-pacientes)",
+      "title": "Tasa de Errores (HTTP 5xx)",
       "type": "timeseries",
       "datasource": "Prometheus",
       "targets": [
         {
-          "expr": "rate(http_server_requests_seconds_count{job=\"ms-pacientes\"}[1m])",
-          "legendFormat": "Requests per sec",
-          "refId": "A"
+          "expr": "sum(rate(http_server_requests_seconds_count{status=~'5..'}[1m])) by (instance)",
+          "legendFormat": "Errores 5xx",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Uso de CPU",
+      "type": "gauge",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "process_cpu_usage{job='ms-pacientes'} * 100",
+          "legendFormat": "CPU %",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Memoria JVM Heap Usada",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area='heap', job='ms-pacientes'} / 1024 / 1024",
+          "legendFormat": "Heap MB",
+          "refId": "D"
         }
       ]
     }
-  ],
-  "schemaVersion": 38,
-  "timezone": "browser"
+  ]
 }

@@ -4,5 +4,7 @@ providers:
     orgId: 1
     folder: 'NexusHealth'
     type: file
+    disableDeletion: false
+    editable: true
     options:
       path: /var/lib/grafana/dashboards
