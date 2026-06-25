@@ -1,16 +1,15 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
+# Usamos una imagen base de Java
+FROM eclipse-temurin:21-jdk-alpine
 
-FROM eclipse-temurin:21-jre
+# Directorio de trabajo
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+# Copiamos el archivo JAR compilado por Maven
+# (Asegúrate de ejecutar './mvnw clean package' antes de construir la imagen localmente)
+COPY target/*.jar app.jar
 
-COPY src/main/resources/wallet /app/wallet
+# Exponemos el puerto
+EXPOSE 8080
 
-EXPOSE 8081
-
+# Comando para ejecutar la app
 ENTRYPOINT ["java", "-jar", "app.jar"]
