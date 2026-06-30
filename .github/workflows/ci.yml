@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - David_Soto
   pull_request:
     types: [opened, synchronize, reopened]
 
