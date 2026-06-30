@@ -9,7 +9,6 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # Exponemos el puerto
-ENV TNS_ADMIN=/app/wallet
 EXPOSE 8081
 
 # Comando para ejecutar la app

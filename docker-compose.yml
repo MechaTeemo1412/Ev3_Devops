@@ -7,10 +7,7 @@ services:
     container_name: pacientes-app
     ports:
       - "8081:8081"
-    environment:
-      - RUTA_WALLET=/app/wallet
-    volumes:
-      - ${RUTA_WALLET}:/app/wallet
+    # Se eliminaron environment y volumes de RUTA_WALLET ya que H2 en memoria no los requiere
     logging:
       driver: loki
       options:
