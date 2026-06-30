@@ -141,7 +141,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: ms-paciente
+          container-name: paciente-container
           image: ${{ secrets.ECR_REPO_URL_PACIENTE }}:latest
 
       - name: Desplegar nueva Task Definition en el Servicio ECS
