@@ -124,17 +124,17 @@ jobs:
       # [MONITOREO] Activa Container Insights en CloudWatch para el clúster remoto de AWS
       - name: Garantizar Monitoreo CloudWatch en el Clúster
         run: |
-          aws ecs update-cluster-settings --cluster ${{ vars.ECS_CLUSTER_NAME }} --settings name=containerInsights,value=enabled
+          aws ecs update-cluster-settings --cluster ${{ secrets.ECS_CLUSTER_NAME }} --settings name=containerInsights,value=enabled
 
       - name: Build de imagen y push a Amazon ECR
         run: |
           docker build -t pacientes-api .
-          docker tag pacientes-api:latest ${{ vars.ECR_REPO_URL_PACIENTE }}:latest
-          docker push ${{ vars.ECR_REPO_URL_PACIENTE }}:latest
+          docker tag pacientes-api:latest ${{ secrets.ECR_REPO_URL_PACIENTE }}:latest
+          docker push ${{ secrets.ECR_REPO_URL_PACIENTE }}:latest
 
       - name: Descargar Task Definition actual desde ECS
         run: |
-          aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
 
       - name: Actualizar Tag de la imagen en la Task Definition
         id: render-task-def
@@ -142,12 +142,12 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: ms-paciente
-          image: ${{ vars.ECR_REPO_URL_PACIENTE }}:latest
+          image: ${{ secrets.ECR_REPO_URL_PACIENTE }}:latest
 
       - name: Desplegar nueva Task Definition en el Servicio ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.render-task-def.outputs.task-definition }}
-          service: ${{ vars.ECS_SERVICE_NAME }}
-          cluster: ${{ vars.ECS_CLUSTER_NAME }}
+          service: ${{ secrets.ECS_SERVICE_NAME }}
+          cluster: ${{ secrets.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
