@@ -25,7 +25,6 @@ jobs:
       - name: Dar permisos al wrapper de Maven
         run: chmod +x mvnw
 
-
       - name: Ejecutar Pruebas
         run: ./mvnw clean verify
 
@@ -122,6 +121,11 @@ jobs:
       - name: Login en Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      # [MONITOREO] Activa Container Insights en CloudWatch para el clúster remoto de AWS
+      - name: Garantizar Monitoreo CloudWatch en el Clúster
+        run: |
+          aws ecs update-cluster-settings --cluster ${{ vars.ECS_CLUSTER_NAME }} --settings name=containerInsights,value=enabled
+
       - name: Build de imagen y push a Amazon ECR
         run: |
           docker build -t pacientes-api .
@@ -147,8 +151,3 @@ jobs:
           service: ${{ vars.ECS_SERVICE_NAME }}
           cluster: ${{ vars.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
-
-
-      - name: Garantizar Monitoreo CloudWatch en el Clúster
-        run: |
-          aws ecs update-cluster-settings --cluster ${{ vars.ECS_CLUSTER_NAME }} --settings name=containerInsights,value=enabled
