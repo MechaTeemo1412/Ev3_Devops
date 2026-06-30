@@ -146,3 +146,8 @@ jobs:
           service: ${{ vars.ECS_SERVICE_NAME }}
           cluster: ${{ vars.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
+
+
+      - name: Garantizar Monitoreo CloudWatch en el Clúster
+        run: |
+          aws ecs update-cluster-settings --cluster ${{ vars.ECS_CLUSTER_NAME }} --settings name=containerInsights,value=enabled
